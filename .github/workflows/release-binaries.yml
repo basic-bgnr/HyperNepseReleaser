@@ -1,0 +1,68 @@
+name: Release APK
+
+on:
+  push:
+    tags:
+    - 'v[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout private git repo
+        run: |
+          eval `ssh-agent -s`
+          ssh-add - <<< '${{ secrets.PRIVATE_KEY }}'
+          git clone ${{ secrets.REPO_LOCATION }}
+
+      - name: Build
+        run: |
+          cd HyperNepse
+          chmod +x ./gradle
+          ./gradlew assemble
+
+      - name: Rename build
+        run: |
+          mv ./HyperNepse/app/build/outputs/apk/release/app-release-unsigned.apk ./HyperNepse.apk
+
+      - name: Sign app APK
+        uses: r0adkll/sign-android-release@v1
+        # ID used to access action output
+        id: sign_app
+        with:
+          releaseDirectory: ./
+          signingKeyBase64: ${{ secrets.KEYSTORE }}
+          alias: ${{ secrets.KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: "34.0.0"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Upload artifact
+          path: |
+            ${{steps.sign_app.outputs.signedReleaseFile}}
+
+  release-github:
+    needs: build
+    if: success()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@v4
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: releases # Here, we download the file to ./releases folder
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "releases/*/*"
