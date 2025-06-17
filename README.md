@@ -15,3 +15,8 @@ It's based on my earlier project [NepseUnofficialAPI](https://www.github.com/bas
 [<img src="./screenshots/top_gainers_losers.png" width=160>](./screenshots/top_gainers_losers.png)
 [<img src="./screenshots/favourites.png" width=160>](./screenshots/favourites.png)
 [<img src="./screenshots/notifications.png" width=160>](./screenshots/notifications.png)
+
+# E. Changelogs
+1. Patch fix `v0.1.1` [June 17, 2025]
+    * fixes `json decode` and `ui` bugs.
+1. Initial release `v0.1.0`, [April 20, 2025]
