@@ -17,6 +17,8 @@ It's based on my earlier project [NepseUnofficialAPI](https://www.github.com/bas
 [<img src="./screenshots/notifications.png" width=160>](./screenshots/notifications.png)
 
 # E. Changelogs
+1. Patch fix `v0.1.2` [Oct 10, 2026]
+    * fixes `json decode` bugs.
 1. Patch fix `v0.1.1` [June 17, 2025]
     * fixes `json decode` and `ui` bugs.
 1. Initial release `v0.1.0`, [April 20, 2025]
